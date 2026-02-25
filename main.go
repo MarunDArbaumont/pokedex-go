@@ -1,7 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/MarunDArbaumont/pokedex-go/repl"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	fmt.Println(repl.cleanInput("Hello World WASSUP"))
 }
