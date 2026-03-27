@@ -6,13 +6,22 @@ import (
 	"net/http"
 )
 
-func (c *Client)ListLocations(pageURL) (RespShallowLocations ,error) {
+func (c *Client)ListLocations(pageURL *string) (RespShallowLocations ,error) {
 	url := baseURL + "/location-area"
 	if pageURL != nil {
 		url = *pageURL
-	} else {
-		url = "https://pokeapi.co/api/v2/location-area?offset=0&limit=20"
 	}
+	
+	if val, ok := c.cache.Get(url); ok {
+		locationsResp := RespShallowLocations{}
+		err := json.Unmarshal(val, &locationsResp)
+		if err != nil {
+			return RespShallowLocations{}, err
+		}
+
+		return locationsResp, nil
+	}
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return RespShallowLocations{}, err
@@ -33,5 +42,7 @@ func (c *Client)ListLocations(pageURL) (RespShallowLocations ,error) {
 	if err != nil {
 		return RespShallowLocations{}, err
 	}
+	
+	c.cache.Add(url, dat)
 	return location, nil
 }

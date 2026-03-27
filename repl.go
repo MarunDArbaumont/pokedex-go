@@ -23,7 +23,6 @@ type config struct {
 
 func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
-	cfg := config{}
 	for ;; {
 			fmt.Print("Pokedex > ")
 			scanner.Scan()
@@ -37,9 +36,14 @@ func startRepl(cfg *config) {
 			command, exists := getCommands()[firstWord]
 
 			if exists {
-				command.callback(&cfg)
+				err := command.callback(cfg)
+				if err != nil {
+					fmt.Println(err)
+				}
+				continue
 			} else {
-				fmt.Print("Unknon command")
+				fmt.Println("Unknon command")
+				continue
 			}
         }
 }

@@ -1,15 +1,12 @@
 package main
 
 import (
-	"io"
-	"net/http"
-	"log"
-	"encoding/json"
 	"fmt"
+	"errors"
 )
 
 func commandMap(cfg *config) error {
-	locationResp, err := cfg.pokeapiClient.ListLocations(cfg.nextLocationsURL)
+	locationsResp, err := cfg.pokeapiClient.ListLocations(cfg.nextLocationsURL)
 	if err != nil {
 		return err
 	}
@@ -23,7 +20,7 @@ func commandMap(cfg *config) error {
 	return nil
 }
 
-func commandMapb(c *config) error {
+func commandMapb(cfg *config) error {
 	if cfg.prevLocationsURL == nil {
 		return errors.New("you're on the first page")
 	}
